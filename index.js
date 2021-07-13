@@ -7,12 +7,13 @@
  * new subject dividers, adding and removing notes within a subject divider, and editing
  * a note.
  */
+
 "use strict";
 (function() {
   window.addEventListener('load', init);
 
   /**
-   * Initialize script by adding event listeners.
+   * Initialize script upon window loading.
    */
   function init() {
     let addNoteBtn = id("addnote");
@@ -74,8 +75,8 @@
 
     // Starting at 1 keeps "Unfiled" at the top
     if (options.length > 1) {
-      for (let i = 1; i < options.length; i++) {
-        if (input < options[i].textContent && !newOptionPlaced) {
+      for (let i = 1; i < options.length && !newOptionPlaced; i++) {
+        if (input < options[i].textContent) {
           subjectList.insertBefore(newOption, options[i]);
           newOptionPlaced = true;
         }
@@ -105,9 +106,9 @@
 
     // Starting at 1 keeps "Unfiled" at the top
     if (details.length > 1) {
-      for (let i = 1; i < details.length; i++) {
+      for (let i = 1; i < details.length && !newDetailsPlaced; i++) {
         let detailSummaryText = details[i].firstElementChild.textContent;
-        if (input < detailSummaryText && !newDetailsPlaced) {
+        if (input < detailSummaryText) {
           subjectContainer.insertBefore(newDetails, details[i]);
           newDetailsPlaced = true;
         }
@@ -125,20 +126,18 @@
   }
 
   /**
-   * Helper method to the addSubject() function to identify if a summary tag already exists for
-   * a new subject added by the user.
+   * Helper method to identify if a summary tag already exists for a new subject
+   * added by the user.
    * @param {string} input the given value for the addSubject input field.
    * @returns {boolean} if the summary to add already exists (true) or not (false).
    */
   function summaryExists(input) {
     let summaries = qsa("summary");
     let subjectExist = false;
-    for (let i = 0; i < summaries.length; i++) {
-      if (summaries[i].textContent === input.value) {
+    for (let i = 0; i < summaries.length && !subjectExist; i++) {
+      if (summaries[i].textContent === input) {
         subjectExist = true;
       }
-
-      // Ask TA if we can break. Once identified, no need to continue searching
     }
     return subjectExist;
   }
@@ -147,7 +146,105 @@
    * Adds a new note element to the DOM below the user input fields.
    */
   function addNote() {
-    //
+    let summaries = qsa("summary");
+    let selectedSubject = id("subjects").value;
+    let nextSummaryULSibling = "";
+    let summaryMatched = false;
+
+    for (let i = 0; i < summaries.length && !summaryMatched; i++) {
+      if (summaries[i].textContent === selectedSubject) {
+        nextSummaryULSibling = summaries[i].nextElementSibling;
+        let formData = getFormData();
+        let newLI = buildNewNote(formData);
+        nextSummaryULSibling.appendChild(newLI);
+        resetFormState(formData[0], formData[1], formData[2], formData[5]);
+        summaryMatched = true;
+      }
+    }
+  }
+
+  /**
+   * Helper method to fully create the new note object to be added.
+   * @param {array} formData the note data fields to build the note
+   * @returns {object} the new note to be added
+   */
+  function buildNewNote(formData) {
+    // Create the new tags
+    let newLI = gen("li");
+    let newArticle = gen("article");
+    let newH2 = gen("h2");
+    let newSpanP = gen("span");
+    let newDateP = gen("p");
+    let newHR = gen("hr");
+    let newNoteContentP = gen("p");
+    let newSpanBtn = gen("span");
+    let newEditBtn = gen("button");
+    let newDeleteBtn = gen("button");
+
+    // Assign the attribute values for the new tags based on the form data
+    newH2.textContent = formData[1].value;
+    newDateP.textContent = formData[2].value;
+    newNoteContentP.textContent = formData[5].value;
+    buildNewButtonsForNewNote(newEditBtn, newDeleteBtn);
+
+    // Assign style values
+    newArticle.style.backgroundColor = formData[3].value;
+    newArticle.style.color = formData[4].value;
+
+    // Build New List Item
+    newLI.appendChild(newArticle);
+    newArticle.appendChild(newH2);
+    newArticle.appendChild(newSpanP);
+    newSpanP.appendChild(newDateP);
+    newArticle.appendChild(newHR);
+    newArticle.appendChild(newNoteContentP);
+    newArticle.appendChild(newSpanBtn);
+    newSpanBtn.appendChild(newEditBtn);
+    newSpanBtn.appendChild(newDeleteBtn);
+
+    return newLI;
+  }
+
+  /**
+   * Helper method to build the new buttons to add to the new note.
+   * @param {object} editBtn the new edit button to be created
+   * @param {object} deleteBtn the new delete button to be created
+   */
+  function buildNewButtonsForNewNote(editBtn, deleteBtn) {
+    editBtn.classList.add("editnote");
+    editBtn.textContent = "Edit Note";
+    editBtn.addEventListener('click', editNote);
+    deleteBtn.classList.add("deletenote");
+    deleteBtn.textContent = "Delete Note";
+    deleteBtn.addEventListener('click', deleteNote);
+  }
+
+  /**
+   * Helper method to obtain the form data and pass to the building functions.
+   * @returns {array} the data from the form to build the note
+   */
+  function getFormData() {
+    let noteSubject = id("subjects");
+    let noteTitle = id("notetitle");
+    let noteDate = id("notedate");
+    let noteBGColor = id("notebgcolor");
+    let noteTextColor = id("notetextcolor");
+    let noteContent = id("notecontent");
+    return [noteSubject, noteTitle, noteDate, noteBGColor, noteTextColor, noteContent];
+  }
+
+  /**
+   * Helper method to reset form state after the new note is built and added.
+   * @param {object} subject the noteSubject field to reset
+   * @param {object} title the noteTitle field to reset
+   * @param {object} date the noteDate field to reset
+   * @param {object} content the noteContent field to reset
+   */
+  function resetFormState(subject, title, date, content) {
+    subject.value = "Unfiled";
+    title.value = "";
+    date.value = "";
+    content.value = "";
   }
 
   /**

@@ -26,6 +26,11 @@
         adding a note, be sure to select the subject you would like your note to be placed,
         or add a new one before adding a new note.
       </p>
+      <p>
+        <strong>**Warning**</strong>
+        The state of the webpage does <strong><em>not</em></strong> persist if the page refreshes.
+        There are currently no save features for your notes.
+      </p>
     </section>
     <section>
       <article>
@@ -37,7 +42,7 @@
         <section class="column">
           <label for="subjects">Subject:</label>
           <select id="subjects">
-            <option>Unfiled</option>
+            <option selected="selected">Unfiled</option>
           </select>
           <label for="notetitle">Title:</label>
           <input id="notetitle" type="text" placeholder="New Note Title">
@@ -58,62 +63,17 @@
     </section>
     <!-- New Subject Dividers will be placed into this container as details tags -->
     <section id="subjectcontainer">
-      <!-- New notes will be placed into their respect details tag as a list item -->
+      <!-- New notes will be placed into their respect details tag as a list item.
+      List items are identified dynamically with class="note#" where # is the nth
+      note added to this details tag. -->
       <details open>
         <summary>Unfiled</summary>
         <ul>
-          <li class="note2">
-            <article>
-              <h2>Unfiled2</h2>
-              <span>
-                <p>January 1, 2000</p>
-              </span>
-              <hr>
-              <p>This is what your notes could look like.</p>
-              <span>
-                <button class="editnote">Edit Note</button>
-                <button class="deletenote">Delete Note</button>
-              </span>
-            </article>
-          </li>
-          <li class="note1">
+          <li>
             <article>
               <h2>Unfiled1</h2>
               <span>
-                <p>January 1, 2000</p>
-              </span>
-              <hr>
-              <p>This is what your notes could look like.</p>
-              <span>
-                <button class="editnote">Edit Note</button>
-                <button class="deletenote">Delete Note</button>
-              </span>
-            </article>
-          </li>
-        </ul>
-      </details>
-      <details>
-        <summary>Biology</summary>
-        <ul>
-          <li class="note2">
-            <article>
-              <h2>Bio2</h2>
-              <span>
-                <p>January 1, 2000</p>
-              </span>
-              <hr>
-              <p>This is what your notes could look like.</p>
-              <span>
-                <button class="editnote">Edit Note</button>
-                <button class="deletenote">Delete Note</button>
-              </span>
-            </article>
-          </li>
-          <li class="note1">
-            <article>
-              <h2>Bio1</h2>
-              <span>
-                <p>January 1, 2000</p>
+                <p>2000-01-01</p>
               </span>
               <hr>
               <p>This is what your notes could look like.</p>
