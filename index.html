@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+  Name: Michael Harris
+  Date: July 14, 2021
+  Section: CSE 154 AD
+
+  This is the index.html page for Creative Project 2. This is a notepad application that allows
+  a user to create new subject dividers and add/edit/delete notes. Along with this page is
+  an index.js for behavior, and styles.css for appearance.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles.css">
+    <script src="index.js"></script>
+    <title>Your Notepad</title>
+  </head>
+  <body>
+    <header>
+      <h1>Your NotePad</h1>
+    </header>
+    <section>
+      <p>
+        <strong>Instructions:</strong>
+        Unfiled is the default subject option that includes a single note for example. When
+        adding a note, be sure to select the subject you would like your note to be placed,
+        or add a new one before adding a new note.
+      </p>
+    </section>
+    <section>
+      <article>
+        <label for="newsubject">Add a New Note Subject?</label>
+        <input id="newsubject" type="text" placeholder="New Subject Title">
+        <button id="addsubject">Add Subject</button>
+      </article>
+      <article>
+        <section class="column">
+          <label for="subjects">Subject:</label>
+          <select id="subjects">
+            <option>Unfiled</option>
+          </select>
+          <label for="notetitle">Title:</label>
+          <input id="notetitle" type="text" placeholder="New Note Title">
+          <label for="notedate">Date:</label>
+          <input id="notedate" type="date">
+        </section>
+        <section class="column">
+          <p>Color code your notes by changing the background and text colors of the note.</p>
+          <label for="notebgcolor">Note Background Color:</label>
+          <input id="notebgcolor" type="color" value="#b2eace">
+          <label for="notetextcolor">Note Text Color:</label>
+          <input id="notetextcolor" type="color" value="#101513">
+        </section>
+        <label for="notecontent">Note:</label>
+        <textarea id="notecontent" placeholder="Your note..."></textarea>
+        <button id="addnote">Add Note</button>
+      </article>
+    </section>
+    <!-- New Subject Dividers will be placed into this container as details tags -->
+    <section id="subjectcontainer">
+      <!-- New notes will be placed into their respect details tag as a list item -->
+      <details open>
+        <summary>Unfiled</summary>
+        <ul>
+          <li class="note2">
+            <article>
+              <h2>Unfiled2</h2>
+              <span>
+                <p>January 1, 2000</p>
+              </span>
+              <hr>
+              <p>This is what your notes could look like.</p>
+              <span>
+                <button class="editnote">Edit Note</button>
+                <button class="deletenote">Delete Note</button>
+              </span>
+            </article>
+          </li>
+          <li class="note1">
+            <article>
+              <h2>Unfiled1</h2>
+              <span>
+                <p>January 1, 2000</p>
+              </span>
+              <hr>
+              <p>This is what your notes could look like.</p>
+              <span>
+                <button class="editnote">Edit Note</button>
+                <button class="deletenote">Delete Note</button>
+              </span>
+            </article>
+          </li>
+        </ul>
+      </details>
+      <details>
+        <summary>Biology</summary>
+        <ul>
+          <li class="note2">
+            <article>
+              <h2>Bio2</h2>
+              <span>
+                <p>January 1, 2000</p>
+              </span>
+              <hr>
+              <p>This is what your notes could look like.</p>
+              <span>
+                <button class="editnote">Edit Note</button>
+                <button class="deletenote">Delete Note</button>
+              </span>
+            </article>
+          </li>
+          <li class="note1">
+            <article>
+              <h2>Bio1</h2>
+              <span>
+                <p>January 1, 2000</p>
+              </span>
+              <hr>
+              <p>This is what your notes could look like.</p>
+              <span>
+                <button class="editnote">Edit Note</button>
+                <button class="deletenote">Delete Note</button>
+              </span>
+            </article>
+          </li>
+        </ul>
+      </details>
+    </section>
+  </body>
+</html>

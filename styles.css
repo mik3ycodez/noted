@@ -1,0 +1,109 @@
+/**
+ * Name: Michael Harris
+ * Date: July 14, 2021
+ * Section: CSE 154 AD
+ *
+ * This is the styles.css document for the index.html webpage. These rules are for the
+ styling of the index.html page for Creative Project 2.
+ */
+
+body {
+  background-color: hsl(45, 36%, 96%);
+  margin: auto;
+  width: 90%;
+}
+
+h2 {
+  text-align: left;
+  float: left;
+}
+
+hr {
+  clear: both;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+li {
+  margin-top: 20px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+}
+
+section > p, section > article > p {
+  background-color: azure;
+  border: dashed 1px black;
+  padding: 5px;
+  text-align: center;
+  font-size: 1.15em;
+}
+
+span, .deletesubject {
+  text-align: right;
+  float: right;
+}
+
+textarea {
+  width: 75%;
+  max-width: 100%;
+  height: 100px;
+}
+
+ul {
+  list-style: none;
+}
+
+h2, span > p {
+  margin-block-start: 0;
+  margin-block-end: 0.25em;
+}
+
+summary {
+  font-size: 2em;
+  background-color: #d1b2ea;
+}
+
+summary:hover {
+  background-color: #c69be9;
+}
+
+section > article, details article {
+  background-color: #b2eace;
+  color: #101513;
+}
+
+details > summary, section > article, details article {
+  border: solid 1px black;
+  padding: 10px;
+}
+
+section > article, article > input, textarea, select, details {
+  margin-bottom: 10px;
+}
+
+section > article, details, summary {
+  box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.2), 0 5px 20px 2px rgba(0, 0, 0, 0.19);
+  border-radius: 10px;
+}
+
+button, input, select, textarea {
+  box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+#addnote {
+  font-size: 1.5em;
+  margin-left: 42.5%;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+section > p {
+  margin-block-start: 0;
+}
