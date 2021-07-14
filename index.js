@@ -18,26 +18,15 @@
    * Initialize script upon window loading.
    */
   function init() {
-    let addNoteBtn = id("addnote");
     let addSubjectBtn = id("addsubject");
-    let deleteNoteBtns = qsa(".deletenote");
-    let editNoteBtns = qsa(".editnote");
-    let saveNoteBtns = qsa(".savenote");
+    let addNoteBtn = id("addnote");
+    let editNoteBtn = qs(".editnote");
+    let deleteNoteBtn = qs(".deletenote");
 
-    addNoteBtn.addEventListener("click", addNote);
     addSubjectBtn.addEventListener("click", addSubject);
-
-    for (let i = 0; i < deleteNoteBtns.length; i++) {
-      deleteNoteBtns[i].addEventListener("click", deleteNote);
-    }
-
-    for (let i = 0; i < editNoteBtns.length; i++) {
-      editNoteBtns[i].addEventListener("click", editNote);
-    }
-
-    for (let i = 0; i < saveNoteBtns.length; i++) {
-      saveNoteBtns[i].addEventListener("click", saveNote);
-    }
+    addNoteBtn.addEventListener("click", addNote);
+    editNoteBtn.addEventListener("click", editNote);
+    deleteNoteBtn.addEventListener("click", deleteNote);
   }
 
   /**
@@ -150,12 +139,11 @@
   function addNote() {
     let summaries = qsa("summary");
     let selectedSubject = id("subjects").value;
-    let nextSummaryULSibling = "";
     let summaryMatched = false;
 
     for (let i = 0; i < summaries.length && !summaryMatched; i++) {
       if (summaries[i].textContent === selectedSubject) {
-        nextSummaryULSibling = summaries[i].nextElementSibling;
+        let nextSummaryULSibling = summaries[i].nextElementSibling;
         let formData = getFormData();
         let newLI = buildNewNote(formData);
         nextSummaryULSibling.appendChild(newLI);
@@ -175,7 +163,6 @@
     let newLI = gen("li");
     let newArticle = gen("article");
     let newH2 = gen("h2");
-    let newSpanP = gen("span");
     let newDateP = gen("p");
     let newHR = gen("hr");
     let newNoteContentP = gen("p");
@@ -196,8 +183,7 @@
     // Build New List Item
     newLI.appendChild(newArticle);
     newArticle.appendChild(newH2);
-    newArticle.appendChild(newSpanP);
-    newSpanP.appendChild(newDateP);
+    newArticle.appendChild(newDateP);
     newArticle.appendChild(newHR);
     newArticle.appendChild(newNoteContentP);
     newArticle.appendChild(newSpanBtn);
@@ -216,6 +202,7 @@
     editBtn.classList.add("editnote");
     editBtn.textContent = "Edit Note";
     editBtn.addEventListener("click", editNote);
+
     deleteBtn.classList.add("deletenote");
     deleteBtn.textContent = "Delete Note";
     deleteBtn.addEventListener("click", deleteNote);
@@ -243,7 +230,6 @@
    * @param {object} content the noteContent field to reset
    */
   function resetFormState(subject, title, date, content) {
-    subject.value = "Unfiled";
     title.value = "";
     date.value = "";
     content.value = "";
@@ -253,8 +239,8 @@
    * Removes the note from the page.
    */
   function deleteNote() {
-    let parent = this.parentNode.parentNode.parentNode;
-    parent.remove();
+    let listItemNote = this.parentNode.parentNode.parentNode;
+    listItemNote.remove();
   }
 
   /**
@@ -264,8 +250,8 @@
   function editNote() {
     let note = this.parentNode.parentNode;
     let adjustTitle = note.querySelector("h2");
-    let adjustDate = note.querySelector("article span > p");
-    let adjustContent = note.querySelector("article > p");
+    let adjustDate = note.querySelector("article > p:nth-child(2)");
+    let adjustContent = note.querySelector("article > p:nth-child(4)");
 
     let newTitleInput = gen("input");
     let newDateInput = gen("input");
@@ -278,7 +264,7 @@
     newContentTextarea.value = adjustContent.textContent;
 
     note.replaceChild(newTitleInput, adjustTitle);
-    note.querySelector("article > span").replaceChild(newDateInput, adjustDate);
+    note.replaceChild(newDateInput, adjustDate);
     note.replaceChild(newContentTextarea, adjustContent);
     addEditColorInputs(note);
 
@@ -320,8 +306,8 @@
    */
   function saveNote() {
     let note = this.parentNode.parentNode;
-    let titleInput = note.querySelector("input");
-    let dateInput = note.querySelector("article span > input");
+    let titleInput = note.querySelector("article > input:nth-child(1)");
+    let dateInput = note.querySelector("article > input:nth-child(2)");
     let contentTextarea = note.querySelector("article > textarea");
     let bgColorInput = note.querySelector(".editbgcolorinput");
     let textColorInput = note.querySelector(".edittextcolorinput");
@@ -337,7 +323,7 @@
     newContentP.textContent = contentTextarea.value;
 
     note.replaceChild(newTitleHeading2, titleInput);
-    note.querySelector("article > span").replaceChild(newDateP, dateInput);
+    note.replaceChild(newDateP, dateInput);
     note.replaceChild(newContentP, contentTextarea);
     removeEditColorInputs(note);
 
