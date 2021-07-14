@@ -10,7 +10,9 @@
 
 "use strict";
 (function() {
-  window.addEventListener('load', init);
+  window.addEventListener("load", init);
+
+  const HEX_BASE = 16;
 
   /**
    * Initialize script upon window loading.
@@ -22,19 +24,19 @@
     let editNoteBtns = qsa(".editnote");
     let saveNoteBtns = qsa(".savenote");
 
-    addNoteBtn.addEventListener('click', addNote);
-    addSubjectBtn.addEventListener('click', addSubject);
+    addNoteBtn.addEventListener("click", addNote);
+    addSubjectBtn.addEventListener("click", addSubject);
 
     for (let i = 0; i < deleteNoteBtns.length; i++) {
-      deleteNoteBtns[i].addEventListener('click', deleteNote);
+      deleteNoteBtns[i].addEventListener("click", deleteNote);
     }
 
     for (let i = 0; i < editNoteBtns.length; i++) {
-      editNoteBtns[i].addEventListener('click', editNote);
+      editNoteBtns[i].addEventListener("click", editNote);
     }
 
     for (let i = 0; i < saveNoteBtns.length; i++) {
-      saveNoteBtns[i].addEventListener('click', saveNote);
+      saveNoteBtns[i].addEventListener("click", saveNote);
     }
   }
 
@@ -181,7 +183,7 @@
     let newEditBtn = gen("button");
     let newDeleteBtn = gen("button");
 
-    // Assign the attribute values for the new tags based on the form data
+    // Assign the attribute values
     newH2.textContent = formData[1].value;
     newDateP.textContent = formData[2].value;
     newNoteContentP.textContent = formData[5].value;
@@ -213,10 +215,10 @@
   function buildNewButtonsForNewNote(editBtn, deleteBtn) {
     editBtn.classList.add("editnote");
     editBtn.textContent = "Edit Note";
-    editBtn.addEventListener('click', editNote);
+    editBtn.addEventListener("click", editNote);
     deleteBtn.classList.add("deletenote");
     deleteBtn.textContent = "Delete Note";
-    deleteBtn.addEventListener('click', deleteNote);
+    deleteBtn.addEventListener("click", deleteNote);
   }
 
   /**
@@ -260,14 +262,126 @@
    * Also updates the Edit Note button to a Save Note button to update the content of the note.
    */
   function editNote() {
-    //
+    let note = this.parentNode.parentNode;
+    let adjustTitle = note.querySelector("h2");
+    let adjustDate = note.querySelector("article span > p");
+    let adjustContent = note.querySelector("article > p");
+
+    let newTitleInput = gen("input");
+    let newDateInput = gen("input");
+    let newContentTextarea = gen("textarea");
+
+    newTitleInput.type = "text";
+    newTitleInput.value = adjustTitle.textContent;
+    newDateInput.type = "date";
+    newDateInput.value = adjustDate.textContent;
+    newContentTextarea.value = adjustContent.textContent;
+
+    note.replaceChild(newTitleInput, adjustTitle);
+    note.querySelector("article > span").replaceChild(newDateInput, adjustDate);
+    note.replaceChild(newContentTextarea, adjustContent);
+    addEditColorInputs(note);
+
+    this.className = "savenote";
+    this.textContent = "Save Note";
+    this.removeEventListener("click", editNote);
+    this.addEventListener("click", saveNote);
+  }
+
+  /**
+   * Helper method to add the color chaning inputs when editing a note.
+   * @param {object} parent the parent node from which to insert the color inputs
+   */
+  function addEditColorInputs(parent) {
+    let bgColorLabel = gen("label");
+    bgColorLabel.textContent = "Note Background Color:";
+
+    let bgColorInput = gen("input");
+    bgColorInput.className = "editbgcolorinput";
+    bgColorInput.type = "color";
+    bgColorInput.value = rgbToHex(parent.style.backgroundColor);
+
+    let textColorLabel = gen("label");
+    textColorLabel.textContent = "Note Text Color:";
+
+    let textColorInput = gen("input");
+    textColorInput.className = "edittextcolorinput";
+    textColorInput.type = "color";
+    textColorInput.value = rgbToHex(parent.style.color);
+
+    parent.insertBefore(bgColorLabel, parent.lastElementChild);
+    parent.insertBefore(bgColorInput, parent.lastElementChild);
+    parent.insertBefore(textColorLabel, parent.lastElementChild);
+    parent.insertBefore(textColorInput, parent.lastElementChild);
   }
 
   /**
    * Updates a note's changes made by a user.
    */
   function saveNote() {
-    //
+    let note = this.parentNode.parentNode;
+    let titleInput = note.querySelector("input");
+    let dateInput = note.querySelector("article span > input");
+    let contentTextarea = note.querySelector("article > textarea");
+    let bgColorInput = note.querySelector(".editbgcolorinput");
+    let textColorInput = note.querySelector(".edittextcolorinput");
+
+    let newTitleHeading2 = gen("h2");
+    let newDateP = gen("p");
+    let newContentP = gen("p");
+
+    note.style.backgroundColor = bgColorInput.value;
+    note.style.color = textColorInput.value;
+    newTitleHeading2.textContent = titleInput.value;
+    newDateP.textContent = dateInput.value;
+    newContentP.textContent = contentTextarea.value;
+
+    note.replaceChild(newTitleHeading2, titleInput);
+    note.querySelector("article > span").replaceChild(newDateP, dateInput);
+    note.replaceChild(newContentP, contentTextarea);
+    removeEditColorInputs(note);
+
+    this.className = "editnote";
+    this.textContent = "Edit Note";
+    this.removeEventListener("click", saveNote);
+    this.addEventListener("click", editNote);
+  }
+
+  /**
+   * Helper method to remove the color changing inputs when editing a note.
+   * @param {object} parent the parent node from which to remove the color inputs
+   */
+  function removeEditColorInputs(parent) {
+    let children = parent.children;
+    for (let i = 0; i < children.length; i++) {
+      let child = children[i];
+      if (child.tagName === "LABEL" || child.tagName === "INPUT") {
+        parent.removeChild(child);
+        i--;
+      }
+    }
+  }
+
+  /**
+   * Assists in the conversion of an RGB color value to hex string.
+   * @param {string} rgbValue the string to split and convert to a hex string
+   * @returns {string} the hex string value for the given rgbValue
+   */
+  function rgbToHex(rgbValue) {
+    if (!rgbValue) {
+      rgbValue = "rgb(0,0,0)";
+    }
+    let rgbValuesSplit = rgbValue.split("(")[1].split(")")[0];
+    let rgbValuesArray = rgbValuesSplit.split(",");
+    let result = "#";
+    for (let i = 0; i < rgbValuesArray.length; i++) {
+      let newHex = parseInt(rgbValuesArray[i]).toString(HEX_BASE);
+      if (newHex.length === 1) {
+        newHex = "0" + newHex;
+      }
+      result += newHex;
+    }
+    return result;
   }
 
   /**
